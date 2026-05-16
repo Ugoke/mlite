@@ -1,0 +1,43 @@
+[build-system]
+requires = [
+    "scikit-build-core>=0.9",
+    "pybind11>=2.12",
+    "cmake>=3.18",
+    "ninja"
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "mlite"
+version = "0.0.1"
+description = "ML library written in C++ and Python"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+
+authors = [
+    { name = "Ugoke" }
+]
+
+dependencies = [
+    "numpy>=1.24"
+]
+
+[project.optional-dependencies]
+
+dev = [
+    "pytest",
+    "ruff",
+    "black",
+]
+
+[tool.scikit-build]
+wheel.packages = ["python/mlite"]
+
+build-dir = "build/{wheel_tag}"
+
+[tool.pytest.ini_options]
+
+testpaths = [
+    "tests"
+]
