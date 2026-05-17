@@ -6,26 +6,22 @@
 
 # Mathematical Model
 
-The model is defined by the following linear function:
+### The model predicts values using a linear equation:
 
-### ŷ = wx + b
+### y_pred = w1x1 + w2x2 + ... + wn*xn + b
 
-where:
-
-* `x` — input feature
-* `w` — model weight
-* `b` — bias
-* `ŷ` — predicted value
-
----
+### where:
+- x — input feature
+- w — weight
+- b — bias (intercept)
+- y_pred — predicted value
 
 # Loss Function
 
 During training, the model minimizes the Mean Squared Error (MSE):
 
-## MSE = (1 / n) * Σ(y - ŷ)^2
+### MSE = (1 / n) * Σ(y - ŷ)^2
 
----
 
 # Creating a Model
 
@@ -43,7 +39,6 @@ model = LinearRegression(
 | `learning_rate` | `float` |
 | `epochs`        | `int`   |
 
----
 
 # Training
 
@@ -56,7 +51,6 @@ model.fit(X, y)
 | `X`       | `(n_samples, 1)` |
 | `y`       | `(n_samples,)`   |
 
----
 
 # Prediction
 
@@ -64,7 +58,20 @@ model.fit(X, y)
 predictions = model.predict(X)
 ```
 
----
+
+# Score
+
+```python
+score = model.score(X, y)
+```
+Returns R^2 score.
+
+| Score | Meaning                        |
+| ----- | ------------------------------ |
+| 1.0   | Perfect prediction             |
+| 0.0   | Same as predicting the mean    |
+| < 0.0 | Worse than predicting the mean |
+
 
 # Example
 
@@ -72,23 +79,54 @@ predictions = model.predict(X)
 import numpy as np
 from mlite import LinearRegression
 
-X = np.array([1, 2, 3, 4, 5], dtype=np.float64)
-y = np.array([2, 4, 6, 8, 10], dtype=np.float64)
+X = np.array(
+    [[1.0],
+     [2.0],
+     [3.0],
+     [4.0],
+     [5.0]],
+    dtype=np.float64
+)
 
-model = LinearRegression()
+y = np.array(
+    [2.0, 4.0, 6.0, 8.0, 10.0],
+    dtype=np.float64
+)
+
+model = LinearRegression(
+    learning_rate=0.01,
+    epochs=1000
+)
 
 model.fit(X, y)
 
 predictions = model.predict(
-    np.array([6, 7], dtype=np.float64)
+    np.array(
+        [[6.0],
+         [7.0]],
+        dtype=np.float64
+    )
 )
 
 print(predictions)
 ```
+# Attributes
 
----
+```python
+model.coef_
+model.intercept_
+```
+
+| Attribute      | Description                                   |
+| -------------- | --------------------------------------------- |
+| coef_          | Learned weights                               |
+| intercept_     | Learned bias                                  |
+| n_features_in_ | Number of input features used during training |
+
+
 
 # Notes
-
-The gradient is calculated without the `2` coefficient from the MSE derivative.
-This is not an error, since the constant factor is typically absorbed into the `learning_rate`.
+- Uses batch gradient descent
+- Uses float64 arrays
+- Input normalization is not automatic
+- Feature scaling may improve convergence

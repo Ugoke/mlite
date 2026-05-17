@@ -1,25 +1,37 @@
 #pragma once
 
-#include <pybind11/numpy.h>
+#include <cstddef>
+#include <vector>
+
+#include "matrix_view.hpp"
+#include "vector_view.hpp"
 
 namespace mlite {
     class LinearRegression {
+        private:
+            std::vector<double> coef_;
+            double intercept_;
+            std::size_t n_features_in_;
+            bool fitted_;
+        
+            double predict_sample(const MatrixView& X, std::size_t row) const;
+        
         public:
-            LinearRegression() = default;
+            LinearRegression();
         
             void fit(
-                pybind11::array_t<double> X,
-                pybind11::array_t<double> y,
-                double lr,
-                int epochs
+                const MatrixView& X,
+                const VectorView& y,
+                double learning_rate,
+                std::size_t epochs
             );
         
-            pybind11::array_t<double> predict(
-                pybind11::array_t<double> X
-            );
+            std::vector<double> predict(const MatrixView& X) const;
         
-        private:
-            double weight = 0.0;
-            double bias = 0.0;
+            double score(const MatrixView& X, const VectorView& y) const;
+        
+            const std::vector<double>& get_coef() const;
+            double get_intercept() const;
+            std::size_t get_n_features_in() const;
     };
 }

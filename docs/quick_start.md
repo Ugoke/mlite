@@ -34,5 +34,4 @@ print(pred)
 ```
 ## Notes
 - X must be a NumPy array with shape (n_samples, n_features)
-- y must be a 1D NumPy array
 - float64 arrays are recommended
