@@ -73,6 +73,36 @@ Returns R^2 score.
 | < 0.0 | Worse than predicting the mean |
 
 
+# Saving Model State
+
+```python
+state = model.state_dict()
+```
+
+Returns a dictionary containing all parameters required to restore the trained model.
+
+| Key              | Description                                   |
+| ---------------- | --------------------------------------------- |
+| `coef`           | Learned weights                               |
+| `intercept`      | Learned bias                                  |
+| `n_features_in`  | Number of input features                      |
+| `learning_rate`  | Learning rate used during training            |
+| `epochs`         | Number of training epochs                     |
+
+
+# Loading Model State
+
+```python
+model.load_state_dict(state)
+```
+
+Restores model parameters from a previously saved state dictionary.
+
+| Parameter | Type   | Description              |
+| ---------- | ------ | ------------------------ |
+| `state`    | `dict` | Model state dictionary   |
+
+
 # Example
 
 ```python

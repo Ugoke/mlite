@@ -12,7 +12,6 @@ namespace mlite {
             std::vector<double> coef_;
             double intercept_;
             std::size_t n_features_in_;
-            bool fitted_;
         
             double predict_sample(const MatrixView& X, std::size_t row) const;
         
@@ -33,5 +32,11 @@ namespace mlite {
             const std::vector<double>& get_coef() const;
             double get_intercept() const;
             std::size_t get_n_features_in() const;
+
+            void load_state(
+                const std::vector<double>& coef,
+                double intercept,
+                std::size_t n_features_in
+            );
     };
 }

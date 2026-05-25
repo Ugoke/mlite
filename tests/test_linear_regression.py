@@ -282,3 +282,38 @@ def test_score_constant_target_returns_finite() -> None:
 def test_learning_rate_nan_rejected() -> None:
     with pytest.raises(ValueError, match="learning_rate must be finite and positive"):
         LinearRegression(learning_rate=np.nan, epochs=100)
+
+
+def test_state_dict():
+    X = np.array([[1], [2], [3], [4]], dtype=np.float64)
+    y = np.array([2, 4, 6, 8], dtype=np.float64)
+
+    model = LinearRegression()
+    model.fit(X, y)
+
+    state = model.state_dict()
+
+    assert "coef" in state
+    assert "intercept" in state
+    assert "n_features_in" in state
+    assert "learning_rate" in state
+    assert "epochs" in state
+
+    assert isinstance(state["coef"], np.ndarray)
+
+
+def test_load_state_dict():
+    model1 = LinearRegression()
+    X = np.array([[1], [2], [3], [4]], dtype=np.float64)
+    y = np.array([2, 4, 6, 8], dtype=np.float64)
+
+    model1.fit(X, y)
+    state = model1.state_dict()
+
+    model2 = LinearRegression()
+    model2.load_state_dict(state)
+
+    preds1 = model1.predict(X)
+    preds2 = model2.predict(X)
+
+    assert np.allclose(preds1, preds2)

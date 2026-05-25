@@ -24,3 +24,12 @@ class LinearRegression:
         X: NDArray[np.float64],
         y: NDArray[np.float64],
     ) -> float: ...
+
+    def state_dict(
+        self,
+    ) -> dict: ...
+
+    def load_state_dict(
+        self, 
+        state: dict,
+    ) -> None: ...

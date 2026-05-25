@@ -21,13 +21,6 @@ void bind_linear(py::module_& m) {
                 auto x_buf = X.request();
                 auto y_buf = y.request();
 
-                // if (x_buf.ndim != 2) {
-                //     throw std::runtime_error("X must be a 2D array");
-                // }
-                // if (y_buf.ndim != 1) {
-                //     throw std::runtime_error("y must be a 1D array");
-                // }
-
                 mlite::MatrixView x_view(
                     static_cast<const double*>(x_buf.ptr),
                     static_cast<std::size_t>(x_buf.shape[0]),
@@ -82,13 +75,6 @@ void bind_linear(py::module_& m) {
                 auto x_buf = X.request();
                 auto y_buf = y.request();
 
-                // if (x_buf.ndim != 2) {
-                //     throw std::runtime_error("X must be a 2D array");
-                // }
-                // if (y_buf.ndim != 1) {
-                //     throw std::runtime_error("y must be a 1D array");
-                // }
-
                 mlite::MatrixView x_view(
                     static_cast<const double*>(x_buf.ptr),
                     static_cast<std::size_t>(x_buf.shape[0]),
@@ -104,6 +90,14 @@ void bind_linear(py::module_& m) {
             },
             py::arg("X"),
             py::arg("y")
+        )
+
+        .def(
+            "load_state",
+            &mlite::LinearRegression::load_state,
+            py::arg("coef"),
+            py::arg("intercept"),
+            py::arg("n_features_in")
         )
 
         .def_property_readonly("coef_", [](const mlite::LinearRegression& self) {

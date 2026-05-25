@@ -115,6 +115,65 @@ class LinearRegression:
 
         return self._model.score(X, y)
 
+    def state_dict(self) -> dict:
+        """
+        Return model state as a dictionary.
+    
+        This method extracts all parameters required to fully
+        reconstruct the trained model.
+    
+        Returns
+        -------
+        dict
+            Dictionary containing model parameters:
+            - coef: learned weights
+            - intercept: bias term
+            - n_features_in: number of input features
+            - learning_rate: training learning rate
+            - epochs: number of training epochs
+        """
+    
+        self._check_is_fitted()
+    
+        return {
+            "coef": self.coef_,
+            "intercept": self.intercept_,
+            "n_features_in": self.n_features_in_,
+            "learning_rate": self.learning_rate,
+            "epochs": self.epochs,
+        }
+    
+    
+    def load_state_dict(self, state: dict) -> None:
+        """
+        Load model state from a dictionary.
+    
+        This method restores a previously saved model state.
+        It overwrites internal parameters and marks the model
+        as fitted.
+    
+        Parameters
+        ----------
+        state : dict
+            Dictionary containing model parameters. Expected keys:
+            - coef
+            - intercept
+            - n_features_in
+            - learning_rate
+            - epochs
+        """
+
+        self._model.load_state(
+            np.asarray(state["coef"], dtype=np.float64),
+            float(state["intercept"]),
+            int(state["n_features_in"]),
+        )
+
+        self.learning_rate = float(state["learning_rate"])
+        self.epochs = int(state["epochs"])
+
+        self._fitted = True
+
     @property
     def coef_(self) -> NDArray[np.float64]:
         self._check_is_fitted()

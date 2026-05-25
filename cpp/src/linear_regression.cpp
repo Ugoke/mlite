@@ -5,8 +5,7 @@ namespace mlite {
     LinearRegression::LinearRegression()
         : coef_(),
           intercept_(0.0),
-          n_features_in_(0),
-          fitted_(false) {}
+          n_features_in_(0) {}
 
     double LinearRegression::predict_sample(const MatrixView& X, std::size_t row) const {
         const double* x_row = X.data() + (row * n_features_in_);
@@ -21,18 +20,13 @@ namespace mlite {
 
     void LinearRegression::fit(const MatrixView& X, const VectorView& y, double learning_rate, std::size_t epochs) {
         const std::size_t samples = X.rows();
-
-        if (samples == 0) {
-            throw std::invalid_argument("Empty dataset");
-        }
-
         const std::size_t features = X.cols();
         coef_.assign(features, 0.0);
         intercept_ = 0.0;
         n_features_in_ = features;
 
         std::vector<double> gradients(features, 0.0);
-        const double inv_samples =2.0 / static_cast<double>(samples);
+        const double inv_samples = 2.0 / static_cast<double>(samples);
 
         for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
             std::fill(gradients.begin(), gradients.end(), 0.0);
@@ -57,7 +51,6 @@ namespace mlite {
 
             intercept_ -= learning_rate * bias_gradient * inv_samples;
         }
-        fitted_ = true;
     }
 
     std::vector<double> LinearRegression::predict(const MatrixView& X) const {
@@ -102,8 +95,7 @@ namespace mlite {
         return 1.0 - (ss_residual / ss_total);
     }
 
-    const std::vector<double>&
-    LinearRegression::get_coef() const {
+    const std::vector<double>& LinearRegression::get_coef() const {
         return coef_;
     }
 
@@ -111,8 +103,13 @@ namespace mlite {
         return intercept_;
     }
 
-    std::size_t
-    LinearRegression::get_n_features_in() const {
+    std::size_t LinearRegression::get_n_features_in() const {
         return n_features_in_;
+    }
+
+    void LinearRegression::load_state(const std::vector<double>& coef, double intercept, std::size_t n_features_in) {
+        coef_ = coef;
+        intercept_ = intercept;
+        n_features_in_ = n_features_in;
     }
 }
