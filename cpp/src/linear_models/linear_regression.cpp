@@ -1,5 +1,6 @@
-#include "mlite/linear_regression.hpp"
+#include "mlite/linear_models/linear_regression.hpp"
 #include <algorithm>
+
 
 namespace mlite {
     LinearRegression::LinearRegression()

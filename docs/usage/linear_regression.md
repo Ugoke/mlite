@@ -26,7 +26,7 @@ During training, the model minimizes the Mean Squared Error (MSE):
 # Creating a Model
 
 ```python
-from mlite import LinearRegression
+from mlite.linear_models.linear_regression import LinearRegression
 
 model = LinearRegression(
     learning_rate=0.01,
@@ -107,7 +107,8 @@ Restores model parameters from a previously saved state dictionary.
 
 ```python
 import numpy as np
-from mlite import LinearRegression
+
+from mlite.linear_models.linear_regression import LinearRegression
 
 X = np.array(
     [[1.0],

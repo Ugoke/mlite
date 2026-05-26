@@ -2,7 +2,8 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
-#include "mlite/linear_regression.hpp"
+#include "mlite/linear_models/linear_regression.hpp"
+
 
 namespace py = pybind11;
 

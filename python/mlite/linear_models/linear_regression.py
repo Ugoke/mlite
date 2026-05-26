@@ -3,10 +3,9 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
 
-from ._core import LinearRegression as _LinearRegression  # type: ignore
-
-DEFAULT_LEARNING_RATE = 0.01
-DEFAULT_EPOCHS = 1000
+from .._core import LinearRegression as _LinearRegression  # type: ignore
+from ..utils._decorators import _ensure_fitted
+from ..utils._constants import DEFAULT_LEARNING_RATE, DEFAULT_EPOCHS
 
 
 class LinearRegression:
@@ -60,6 +59,7 @@ class LinearRegression:
 
         self._fitted = True
 
+    @_ensure_fitted
     def predict(self, X: NDArray[np.float64]) -> NDArray[np.float64]:
         """
         Predict values.
@@ -75,8 +75,6 @@ class LinearRegression:
             Predictions.
         """
 
-        self._check_is_fitted()
-
         X = self._validate_X(X)
 
         if X.shape[1] != self.n_features_in_:
@@ -84,6 +82,7 @@ class LinearRegression:
 
         return self._model.predict(X)
 
+    @_ensure_fitted
     def score(self, X: NDArray[np.float64], y: NDArray[np.float64]) -> float:
         """
         Compute R² score.
@@ -102,8 +101,6 @@ class LinearRegression:
             R² score.
         """
 
-        self._check_is_fitted()
-
         X = self._validate_X(X)
         y = self._validate_y(y)
 
@@ -115,6 +112,7 @@ class LinearRegression:
 
         return self._model.score(X, y)
 
+    @_ensure_fitted
     def state_dict(self) -> dict:
         """
         Return model state as a dictionary.
@@ -132,16 +130,16 @@ class LinearRegression:
             - learning_rate: training learning rate
             - epochs: number of training epochs
         """
-    
-        self._check_is_fitted()
-    
-        return {
+
+        state = {
             "coef": self.coef_,
             "intercept": self.intercept_,
             "n_features_in": self.n_features_in_,
             "learning_rate": self.learning_rate,
             "epochs": self.epochs,
         }
+
+        return state
     
     
     def load_state_dict(self, state: dict) -> None:
@@ -175,23 +173,19 @@ class LinearRegression:
         self._fitted = True
 
     @property
+    @_ensure_fitted
     def coef_(self) -> NDArray[np.float64]:
-        self._check_is_fitted()
         return np.asarray(self._model.coef_)
 
     @property
+    @_ensure_fitted
     def intercept_(self) -> float:
-        self._check_is_fitted()
         return float(self._model.intercept_)
 
     @property
+    @_ensure_fitted
     def n_features_in_(self) -> int:
-        self._check_is_fitted()
         return int(self._model.n_features_in_)
-
-    def _check_is_fitted(self) -> None:
-        if not self._fitted:
-            raise RuntimeError("Model is not fitted")
 
     @staticmethod
     def _validate_X(X: NDArray[np.float64]) -> NDArray[np.float64]:

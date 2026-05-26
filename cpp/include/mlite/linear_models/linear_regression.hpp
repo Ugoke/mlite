@@ -3,8 +3,9 @@
 #include <cstddef>
 #include <vector>
 
-#include "matrix_view.hpp"
-#include "vector_view.hpp"
+#include "mlite/core/matrix_view.hpp"
+#include "mlite/core/vector_view.hpp"
+
 
 namespace mlite {
     class LinearRegression {

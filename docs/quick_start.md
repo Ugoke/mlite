@@ -5,7 +5,7 @@ Train a simple linear regression model and make predictions.
 ```python
 import numpy as np
 
-from mlite import LinearRegression
+from mlite.linear_models.linear_regression import LinearRegression
 
 X = np.array([
     [1.0],

@@ -2,7 +2,7 @@ import numpy as np
 
 import pytest
 
-from mlite import LinearRegression
+from mlite.linear_models.linear_regression import LinearRegression
 
 
 def test_fit_and_predict() -> None:
