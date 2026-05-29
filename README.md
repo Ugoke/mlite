@@ -11,6 +11,7 @@ The core is written in C++ using pybind11, while Python provides a friendly inte
 
 ## Features
 - Linear Regression
+- Logistic Regression
 - NumPy support
 - Fast C++ core
 
@@ -18,3 +19,4 @@ The core is written in C++ using pybind11, while Python provides a friendly inte
 - [Installation](docs/installation.md)
 - [Quick Start](docs/quick_start.md)
 - [Linear Regression](docs/usage/linear_regression.md)
+- [Logistic Regression](docs/usage/logistic_regression.md)

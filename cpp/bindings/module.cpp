@@ -2,10 +2,12 @@
 
 namespace py = pybind11;
 
-void bind_linear(py::module_& m);
+void bind_linear_regression(py::module_& m);
+void bind_logistic_regression(py::module_& m);
 
 PYBIND11_MODULE(_core, m) {
     m.doc() = "mlite core";
 
-    bind_linear(m);
+    bind_linear_regression(m);
+    bind_logistic_regression(m);
 }

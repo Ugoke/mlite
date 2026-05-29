@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-void bind_linear(py::module_& m) {
+void bind_linear_regression(py::module_& m) {
     py::class_<mlite::LinearRegression>(m, "LinearRegression")
         .def(py::init<>())
 

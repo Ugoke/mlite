@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     mlite
-    VERSION 0.0.4
+    VERSION 0.0.5
     DESCRIPTION "ML library"
     LANGUAGES CXX
 )
@@ -48,8 +48,10 @@ pybind11_add_module(
 
     cpp/bindings/module.cpp
     cpp/bindings/linear_models/py_linear_regression.cpp
+    cpp/bindings/linear_models/py_logistic_regression.cpp
 
     cpp/src/linear_models/linear_regression.cpp
+    cpp/src/linear_models/logistic_regression.cpp
 )
 
 # =========================================
