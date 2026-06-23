@@ -6,6 +6,7 @@ from numpy.typing import NDArray
 from .._core import LinearRegression as _LinearRegression  # type: ignore
 from ..utils._decorators import _ensure_fitted
 from ..utils._constants import DEFAULT_LEARNING_RATE, DEFAULT_EPOCHS
+from ..utils._validators import _validate_X, _validate_y, _validate_epochs, _validate_learning_rate
 
 
 class LinearRegression:
@@ -22,12 +23,11 @@ class LinearRegression:
     """
 
     def __init__(
-        self, learning_rate: float = DEFAULT_LEARNING_RATE, epochs: int = DEFAULT_EPOCHS
-    ) -> None:
+        self, learning_rate: float = DEFAULT_LEARNING_RATE, epochs: int = DEFAULT_EPOCHS) -> None:
         self._model = _LinearRegression()
 
-        self.learning_rate = self._validate_learning_rate(learning_rate)
-        self.epochs = self._validate_epochs(epochs)
+        self.learning_rate = _validate_learning_rate(learning_rate)
+        self.epochs = _validate_epochs(epochs)
 
         self._fitted = False
 
@@ -44,8 +44,8 @@ class LinearRegression:
             Target values with shape (n_samples,)
         """
 
-        X = self._validate_X(X)
-        y = self._validate_y(y)
+        X = _validate_X(X)
+        y = _validate_y(y)
 
         if X.shape[0] != y.shape[0]:
             raise ValueError("X and y must have same number of samples")
@@ -75,7 +75,7 @@ class LinearRegression:
             Predictions.
         """
 
-        X = self._validate_X(X)
+        X = _validate_X(X)
 
         if X.shape[1] != self.n_features_in_:
             raise ValueError("X has different number of features")
@@ -101,8 +101,8 @@ class LinearRegression:
             R² score.
         """
 
-        X = self._validate_X(X)
-        y = self._validate_y(y)
+        X = _validate_X(X)
+        y = _validate_y(y)
 
         if X.shape[0] != y.shape[0]:
             raise ValueError("X and y must have same number of samples")
@@ -186,50 +186,3 @@ class LinearRegression:
     @_ensure_fitted
     def n_features_in_(self) -> int:
         return int(self._model.n_features_in_)
-
-    @staticmethod
-    def _validate_X(X: NDArray[np.float64]) -> NDArray[np.float64]:
-        X = np.asarray(X, dtype=np.float64)
-
-        if X.ndim == 1:
-            X = X.reshape(-1, 1)
-
-        if X.ndim != 2:
-            raise ValueError("X must be 2D")
-
-        if X.shape[0] == 0:
-            raise ValueError("X cannot be empty")
-
-        return X
-
-    @staticmethod
-    def _validate_y(y: NDArray[np.float64]) -> NDArray[np.float64]:
-        y = np.asarray(y, dtype=np.float64)
-
-        if y.ndim != 1:
-            raise ValueError("y must be 1D")
-
-        if y.shape[0] == 0:
-            raise ValueError("y cannot be empty")
-
-        return y
-
-    @staticmethod
-    def _validate_learning_rate(learning_rate: float) -> float:
-        if not isinstance(learning_rate, float):
-            raise TypeError("learning_rate must be float")
-
-        if learning_rate <= 0 or not np.isfinite(learning_rate):
-            raise ValueError("learning_rate must be finite and positive")
-
-        return learning_rate
-
-    @staticmethod
-    def _validate_epochs(epochs: int) -> int:
-        if not isinstance(epochs, int):
-            raise TypeError("epochs must be int")
-
-        if epochs <= 0:
-            raise ValueError("epochs must be positive")
-
-        return epochs

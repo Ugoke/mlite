@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from mlite import LogisticRegression
+from mlite.linear_models import LogisticRegression
 
 
 @pytest.fixture

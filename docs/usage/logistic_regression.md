@@ -1,11 +1,19 @@
 # LogisticRegression
+
 `LogisticRegression` is a binary classification model that predicts probabilities using the logistic (sigmoid) function.
+
 The model is trained using batch gradient descent optimization.
+
 ---
+
 # Mathematical Model
+
 The model computes a linear combination of input features:
+
 ## z = w1x1 + w2x2 + ... + wn*xn + b
+
 Where:
+
 * `x` — input feature
 * `w` — weight
 * `b` — bias (intercept)
@@ -14,8 +22,11 @@ Where:
 The linear output is transformed into a probability using the sigmoid function:
 
 ## σ(z) = 1 / (1 + e^(-z))
+
 Predicted probability:
+
 ## P(y = 1 | x) = σ(z)
+
 Classification rule:
 
 ```python
@@ -32,7 +43,7 @@ threshold = 0.5
 
 # Loss Function
 
-The implementation optimizes Binary Cross Entropy (BCE) using its analytical gradient.
+The implementation optimizes Binary Cross Entropy (BCE) using its analytical derivative.
 
 Binary Cross Entropy:
 
@@ -44,9 +55,10 @@ Where:
 * `p` — predicted probability
 
 The implementation does not explicitly compute BCE during training.
-Instead, it uses the simplified gradient:
 
-## gradient = prediction - target
+Instead, it uses the derivative of BCE with respect to the linear output:
+
+## ∂L/∂z = prediction - target
 
 Which is mathematically equivalent for logistic regression with sigmoid activation and BCE loss.
 
@@ -55,18 +67,23 @@ Which is mathematically equivalent for logistic regression with sigmoid activati
 # Creating a Model
 
 ```python
-from mlite.linear_models.logistic_regression import LogisticRegression
+from mlite.linear_models import LogisticRegression
 
-model = LogisticRegression()
+model = LogisticRegression(
+    learning_rate=0.01,
+    epochs=1000
+)
 ```
 
-The model constructor initializes:
+| Parameter       | Type    |
+| --------------- | ------- |
+| `learning_rate` | `float` |
+| `epochs`        | `int`   |
 
-* empty coefficients
-* intercept = 0.0
-* n_features_in_ = 0
+Requirements:
 
-Training parameters are passed directly into `fit()`.
+* `learning_rate` must be finite and positive
+* `epochs` must be positive
 
 ---
 
@@ -75,25 +92,33 @@ Training parameters are passed directly into `fit()`.
 ```python
 model.fit(
     X,
-    y,
-    learning_rate=0.001,
-    epochs=1000
+    y
 )
 ```
 
-| Parameter       | Type       | Description                            |
-| --------------- | ---------- | -------------------------------------- |
-| `X`             | array-like | Input matrix `(n_samples, n_features)` |
-| `y`             | array-like | Binary labels `(n_samples,)`           |
-| `learning_rate` | `float`    | Gradient descent step size             |
-| `epochs`        | `int`      | Number of training iterations          |
+| Parameter | Type       | Description                            |
+| --------- | ---------- | -------------------------------------- |
+| `X`       | array-like | Input matrix `(n_samples, n_features)` |
+| `y`       | array-like | Binary labels `(n_samples,)`           |
 
 Requirements:
 
-* `y` must contain only:
+* `X` must be non-empty
+* `y` must be non-empty
+* `X` and `y` must contain the same number of samples
+* `y` must contain only binary labels `0` and `1`
 
-  * `0`
-  * `1`
+One-dimensional input is automatically reshaped:
+
+```python
+X.shape == (n_samples,)
+```
+
+becomes
+
+```python
+X.shape == (n_samples, 1)
+```
 
 Training uses batch gradient descent:
 
@@ -109,7 +134,13 @@ Training uses batch gradient descent:
 probabilities = model.predict_proba(X)
 ```
 
-Returns probabilities in range:
+Returns:
+
+```python
+np.ndarray with shape (n_samples,)
+```
+
+Values are in range:
 
 ```python
 [0.0, 1.0]
@@ -131,7 +162,13 @@ predictions = model.predict(X)
 Returns:
 
 ```python
-[0, 1]
+np.ndarray with shape (n_samples,)
+```
+
+containing values:
+
+```python
+0 or 1
 ```
 
 Custom threshold:
@@ -170,7 +207,6 @@ Accuracy formula:
 | Score | Meaning                |
 | ----- | ---------------------- |
 | `1.0` | Perfect classification |
-| `0.5` | Random guessing level  |
 | `0.0` | Completely incorrect   |
 
 Custom threshold:
@@ -185,39 +221,57 @@ score = model.score(
 
 ---
 
+# Saving Model State
+
+```python
+state = model.state_dict()
+```
+
+Returns:
+
+```python
+{
+    "coef": ...,
+    "intercept": ...,
+    "n_features_in": ...,
+    "learning_rate": ...,
+    "epochs": ...
+}
+```
+
+---
+
 # Loading Model State
 
 ```python
-model.load_state(
-    coef,
-    intercept,
-    n_features_in
-)
+model.load_state_dict(state)
 ```
 
-Restores model parameters.
+Restores model parameters and training configuration.
 
-| Parameter       | Type       | Description              |
-| --------------- | ---------- | ------------------------ |
-| `coef`          | array-like | Learned weights          |
-| `intercept`     | `float`    | Bias term                |
-| `n_features_in` | `int`      | Number of input features |
+The state dictionary must contain:
+
+* `coef`
+* `intercept`
+* `n_features_in`
+* `learning_rate`
+* `epochs`
 
 ---
 
 # Accessing Parameters
 
 ```python
-model.get_coef()
-model.get_intercept()
-model.get_n_features_in()
+model.coef_
+model.intercept_
+model.n_features_in_
 ```
 
-| Method                | Description                      |
-| --------------------- | -------------------------------- |
-| `get_coef()`          | Returns learned weights          |
-| `get_intercept()`     | Returns learned bias             |
-| `get_n_features_in()` | Returns number of input features |
+| Property         | Description                      |
+| ---------------- | -------------------------------- |
+| `coef_`          | Returns learned weights          |
+| `intercept_`     | Returns learned bias             |
+| `n_features_in_` | Returns number of input features |
 
 ---
 
@@ -226,7 +280,7 @@ model.get_n_features_in()
 ```python
 import numpy as np
 
-from mlite.linear_models.logistic_regression import LogisticRegression
+from mlite.linear_models import LogisticRegression
 
 X = np.array(
     [
@@ -252,14 +306,12 @@ y = np.array(
     dtype=np.float64
 )
 
-model = LogisticRegression()
-
-model.fit(
-    X,
-    y,
+model = LogisticRegression(
     learning_rate=0.001,
     epochs=5000
 )
+
+model.fit(X, y)
 
 probabilities = model.predict_proba(X)
 predictions = model.predict(X)
@@ -277,12 +329,13 @@ print(accuracy)
 * Uses binary logistic regression
 * Uses batch gradient descent
 * Uses sigmoid activation
-* Optimizes BCE through analytical gradients
+* Optimizes BCE through analytical derivatives
 * Supports binary classification only
 * Labels must be `0` or `1`
 * Uses float64 computations
 * Input normalization is not automatic
 * Feature scaling may improve convergence
 * Prediction threshold is configurable
-* Training parameters are not stored in the model state
+* Supports model serialization through `state_dict()`
+* Raises an exception when prediction methods are called before fitting
 * BCE is not explicitly computed during training

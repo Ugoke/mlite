@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     mlite
-    VERSION 0.0.5
+    VERSION 0.0.6
     DESCRIPTION "ML library"
     LANGUAGES CXX
 )
@@ -46,12 +46,14 @@ find_package(pybind11 REQUIRED)
 pybind11_add_module(
     _core
 
-    cpp/bindings/module.cpp
-    cpp/bindings/linear_models/py_linear_regression.cpp
-    cpp/bindings/linear_models/py_logistic_regression.cpp
+    core/bindings/module.cpp
+    core/bindings/linear_models/py_linear_regression.cpp
+    core/bindings/linear_models/py_logistic_regression.cpp
+    core/bindings/model_selection/py_train_test_split.cpp
 
-    cpp/src/linear_models/linear_regression.cpp
-    cpp/src/linear_models/logistic_regression.cpp
+    core/src/linear_models/linear_regression.cpp
+    core/src/linear_models/logistic_regression.cpp
+    core/src/model_selection/train_test_split.cpp
 )
 
 # =========================================
@@ -61,7 +63,7 @@ pybind11_add_module(
 target_include_directories(
     _core
     PRIVATE
-    cpp/include
+    core/include
 )
 
 # =========================================
