@@ -10,7 +10,9 @@ The model is trained using batch gradient descent optimization.
 
 The model computes a linear combination of input features:
 
-## z = w1x1 + w2x2 + ... + wn*xn + b
+$$
+z = w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b
+$$
 
 Where:
 
@@ -21,11 +23,15 @@ Where:
 
 The linear output is transformed into a probability using the sigmoid function:
 
-## σ(z) = 1 / (1 + e^(-z))
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}}
+$$
 
 Predicted probability:
 
-## P(y = 1 | x) = σ(z)
+$$
+P(y = 1 \mid x) = \sigma(z)
+$$
 
 Classification rule:
 
@@ -45,9 +51,14 @@ threshold = 0.5
 
 The implementation optimizes Binary Cross Entropy (BCE) using its analytical derivative.
 
-Binary Cross Entropy:
+Binary Cross Entropy (BCE):
 
-## BCE = -(1 / n) * Σ[y * log(p) + (1 - y) * log(1 - p)]
+$$
+\mathcal{L} = -\frac{1}{n} \sum_{i=1}^{n}
+\left[
+y_i \log(p_i) + (1 - y_i)\log(1 - p_i)
+\right]
+$$
 
 Where:
 
@@ -58,7 +69,9 @@ The implementation does not explicitly compute BCE during training.
 
 Instead, it uses the derivative of BCE with respect to the linear output:
 
-## ∂L/∂z = prediction - target
+$$
+\frac{\partial \mathcal{L}}{\partial z} = \hat{y} - y
+$$
 
 Which is mathematically equivalent for logistic regression with sigmoid activation and BCE loss.
 

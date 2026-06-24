@@ -8,7 +8,9 @@
 
 ### The model predicts values using a linear equation:
 
-### y_pred = w1x1 + w2x2 + ... + wn*xn + b
+$$
+\hat{y} = w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b
+$$
 
 ### where:
 - x — input feature
@@ -20,7 +22,9 @@
 
 During training, the model minimizes the Mean Squared Error (MSE):
 
-### MSE = (1 / n) * Σ(y - ŷ)^2
+$$
+\mathrm{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$$
 
 
 # Creating a Model
@@ -64,7 +68,7 @@ predictions = model.predict(X)
 ```python
 score = model.score(X, y)
 ```
-Returns R^2 score.
+Returns $R^2$ score.
 
 | Score | Meaning                        |
 | ----- | ------------------------------ |
