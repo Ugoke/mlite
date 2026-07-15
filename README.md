@@ -25,3 +25,4 @@ The core is written in C++ using pybind11, while Python provides a friendly inte
 ## Developer Documentation
 - [Project Structure](docs/dev/project_structure.md)
 - [Documentation Structure](docs/dev/docs_structure.md)
+- [Creating New Modules](docs/dev/new_module_development.md)

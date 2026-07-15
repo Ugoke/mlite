@@ -1,5 +1,7 @@
 # Documentation Standard for the Project
 
+For the complete developer workflow for adding a documented module, see [Creating New Modules](new_module_development.md).
+
 ## General Principle
 
 Each component of the library has its own dedicated documentation page.
