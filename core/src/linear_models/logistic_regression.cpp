@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 
+
 namespace mlite {
     LogisticRegression::LogisticRegression()
         : coef_(),
