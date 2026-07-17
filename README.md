@@ -21,6 +21,7 @@ The core is written in C++ using pybind11, while Python provides a friendly inte
 - [Linear Regression](docs/lib/linear_models/linear_regression.md)
 - [Logistic Regression](docs/lib/linear_models/logistic_regression.md)
 - [Model Selection](docs/lib/model_selection/model_selection.md)
+- [Metrics](docs/lib/metrics/metrics.md)
 
 ## Developer Documentation
 - [Project Structure](docs/dev/project_structure.md)

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     mlite
-    VERSION 0.0.9
+    VERSION 0.0.10
     DESCRIPTION "ML library"
     LANGUAGES CXX
 )
@@ -51,11 +51,15 @@ pybind11_add_module(
     core/bindings/linear_models/py_logistic_regression.cpp
     core/bindings/model_selection/py_train_test_split.cpp
     core/bindings/model_selection/py_stratified_shuffle_split.cpp
+    core/bindings/metrics/py_r2_score.cpp
+    core/bindings/metrics/py_accuracy_score.cpp
 
     core/src/linear_models/linear_regression.cpp
     core/src/linear_models/logistic_regression.cpp
     core/src/model_selection/train_test_split.cpp
     core/src/model_selection/stratified_shuffle_split.cpp
+    core/src/metrics/r2_score.cpp
+    core/src/metrics/accuracy_score.cpp
 )
 
 # =========================================

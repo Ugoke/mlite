@@ -8,12 +8,7 @@
 
 
 namespace mlite {
-    StratifiedShuffleSplit stratified_shuffle_split(
-        const MatrixView& X,
-        const VectorView& y,
-        double test_size,
-        std::uint32_t random_state
-    ) {
+    StratifiedShuffleSplit stratified_shuffle_split(const MatrixView& X, const VectorView& y, double test_size, std::uint32_t random_state) {
         const std::size_t n_samples = X.rows();
         const std::size_t n_features = X.cols();
 
@@ -37,11 +32,7 @@ namespace mlite {
             std::shuffle(indices.begin(), indices.end(), rng);
 
             const std::size_t class_size = indices.size();
-
-            const std::size_t n_test =
-                static_cast<std::size_t>(
-                    std::round(class_size * test_size)
-                );
+            const std::size_t n_test = static_cast<std::size_t>(std::round(class_size * test_size));
 
             if (n_test == 0 || n_test >= class_size) {
                 throw std::invalid_argument(
@@ -51,17 +42,8 @@ namespace mlite {
                 );
             }
 
-            test_indices.insert(
-                test_indices.end(),
-                indices.begin(),
-                indices.begin() + n_test
-            );
-
-            train_indices.insert(
-                train_indices.end(),
-                indices.begin() + n_test,
-                indices.end()
-            );
+            test_indices.insert(test_indices.end(), indices.begin(), indices.begin() + n_test);
+            train_indices.insert(train_indices.end(), indices.begin() + n_test, indices.end());
         }
 
         std::shuffle(train_indices.begin(), train_indices.end(), rng);

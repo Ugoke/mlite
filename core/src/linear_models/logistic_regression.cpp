@@ -1,4 +1,5 @@
 #include "mlite/linear_models/logistic_regression.hpp"
+#include "mlite/metrics/accuracy_score.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -19,10 +20,6 @@ namespace mlite {
             const double e = std::exp(z);
             return e / (1.0 + e);
         }
-    }
-
-    double LogisticRegression::sigmoid(double z) const {
-        return sigmoid_stable(z);
     }
 
     double LogisticRegression::predict_probability_sample(const MatrixView& X, std::size_t row) const {
@@ -127,24 +124,26 @@ namespace mlite {
     double LogisticRegression::score(const MatrixView& X, const VectorView& y, double threshold) const {
         const std::size_t samples = X.rows();
         const std::size_t features = n_features_in_;
+
+        std::vector<double> predictions(samples);
+
         const double* x_data = X.data();
-        std::size_t correct = 0;
 
         for (std::size_t i = 0; i < samples; ++i) {
             const double* x_row = x_data + i * features;
+
             double linear = intercept_;
 
             for (std::size_t j = 0; j < features; ++j) {
                 linear += coef_[j] * x_row[j];
             }
 
-            const int predicted = (sigmoid_stable(linear) >= threshold) ? 1 : 0;
-            if (predicted == static_cast<int>(y(i))) {
-                ++correct;
-            }
+            predictions[i] = (sigmoid_stable(linear) >= threshold) ? 1.0 : 0.0;
         }
 
-        return static_cast<double>(correct) / static_cast<double>(samples);
+        VectorView y_pred(predictions.data(), predictions.size());
+
+        return mlite::accuracy_score(y, y_pred);
     }
 
     const std::vector<double>& LogisticRegression::get_coef() const {

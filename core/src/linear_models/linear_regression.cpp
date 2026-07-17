@@ -1,4 +1,6 @@
 #include "mlite/linear_models/linear_regression.hpp"
+#include "mlite/metrics/r2_score.hpp"
+
 #include <algorithm>
 
 
@@ -67,33 +69,15 @@ namespace mlite {
     }
 
     double LinearRegression::score(const MatrixView& X, const VectorView& y) const {
-        const std::size_t samples = y.size();
+        std::vector<double> predictions(y.size());
 
-        double mean = 0.0;
-
-        for (std::size_t i = 0; i < samples; ++i) {
-            mean += y(i);
+        for (std::size_t i = 0; i < y.size(); ++i) {
+            predictions[i] = predict_sample(X, i);
         }
 
-        mean /= static_cast<double>(samples);
+        VectorView y_pred(predictions.data(), predictions.size());
 
-        double ss_total = 0.0;
-        double ss_residual = 0.0;
-
-        for (std::size_t i = 0; i < samples; ++i) {
-            const double prediction = predict_sample(X, i);
-            const double total_diff = y(i) - mean;
-            const double residual_diff = y(i) - prediction;
-
-            ss_total += total_diff * total_diff;
-            ss_residual += residual_diff * residual_diff;
-        }
-
-        if (ss_total == 0.0) {
-            return 0.0;
-        }
-
-        return 1.0 - (ss_residual / ss_total);
+        return mlite::r2_score(y, y_pred);
     }
 
     const std::vector<double>& LinearRegression::get_coef() const {
