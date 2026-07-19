@@ -69,14 +69,10 @@ namespace mlite {
     }
 
     double LinearRegression::score(const MatrixView& X, const VectorView& y) const {
-        std::vector<double> predictions(y.size());
-
-        for (std::size_t i = 0; i < y.size(); ++i) {
-            predictions[i] = predict_sample(X, i);
-        }
-
+        std::vector<double> predictions = predict(X);
+    
         VectorView y_pred(predictions.data(), predictions.size());
-
+    
         return mlite::r2_score(y, y_pred);
     }
 

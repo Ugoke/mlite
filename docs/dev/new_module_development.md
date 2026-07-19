@@ -1,6 +1,6 @@
-# Developer Guide: Creating Modules for mlite
+﻿# Developer Guide: Creating Modules for mlite
 
-> This document is intended to be the only resource needed to add a new public module to `mlite`. It describes the project as of version 0.0.7.
+> This document is intended to be the only resource needed to add a new public module to `mlite`.
 >
 > Labels used below:
 >
@@ -10,16 +10,16 @@
 
 ## 1. Project overview
 
-`mlite` is a Python package with a C++17 computation core. Users call a pure Python API; its wrapper validates and normalizes data, and the single native module `mlite._core` performs the computationally intensive work.
+`mlite` is a Python package with a C++17 computation core. Users interact with a pure Python API, whose wrappers validate and normalize input before delegating computation to the native `mlite._core` module.
 
 ```text
 User
     │  from mlite.<category> import <PublicName>
     ▼
 Python wrapper (python/mlite/<category>/<snake_name>.py)
-    │  type/shape/state validation; NumPy conversion
+    │  validation; NumPy conversion
     ▼
-pybind11 export in mlite._core (core/bindings/.../py_<snake_name>.cpp)
+pybind11 binding (core/bindings/.../py_<snake_name>.cpp)
     │  NumPy buffer → MatrixView / VectorView or scalar
     ▼
 C++ API (core/include/mlite/<category>/<snake_name>.hpp)
@@ -29,43 +29,24 @@ C++ implementation (core/src/<category>/<snake_name>.cpp)
 
 ### Separation of responsibilities
 
-| Layer | Responsible for | Must not be responsible for |
+| Layer | Responsibility | Excludes |
 | --- | --- | --- |
-| Python public API | ergonomic API, docstrings, validation, `ndarray`/scalar handling, lifecycle, serialization, result conversion | mathematics in data-processing loops |
-| pybind11 binding | Python/C++ conversion, exact exported names and arguments, returned-memory ownership | business validation and the algorithm |
-| C++ core | algorithm, compact state, fast loops, C++ invariants | NumPy-specific behavior and user-facing validation messages |
-| `core` views | safe read-only access to contiguous `double` buffers | memory ownership or array mutation |
-| Stubs | static description of available Python API | runtime behavior |
-| Tests | user contract and regression coverage | testing private implementation details |
-| Docs | explain public behavior without source access | line-by-line copies of internals |
+| Python public API | Public API, validation, lifecycle, serialization, result conversion | Algorithms |
+| pybind11 binding | Python/C++ conversion, exported interface, memory ownership | Validation and algorithms |
+| C++ core | Algorithms, internal state, performance-critical code | Python-specific behavior and user-facing validation |
+| `core` views | Read-only access to contiguous `double` buffers | Ownership and mutation |
+| Stubs | Static typing | Runtime behavior |
+| Tests | Public contract and regression coverage | Private implementation details |
+| Docs | Public behavior | Internal implementation details |
 
 ### Current public categories
 
 | Category | Public items | Implementation |
 | --- | --- | --- |
-| `linear_models` | `LinearRegression`, `LogisticRegression` | trainable C++ classes plus Python classes |
-| `model_selection` | `train_test_split` | C++ free function plus Python function |
-| `utils` | internal validators, constants, decorator | Python-only; not exported as public API |
-
-**[Explicit]** The project currently has only two types of public modules: a trainable model class and a stateless core function. The templates below are required for their corresponding type. Define the contract for a third type and extend this guide before adding one.
-
-### Inventory of current components
-
-| Component | Purpose and public contract |
-| --- | --- |
-| `MatrixView` | Non-owning read-only C++ view of a 2D `double` matrix, addressed in row-major order. |
-| `VectorView` | Non-owning read-only C++ view of a 1D `double` vector. |
-| `LinearRegression` | Batch-gradient-descent regressor: `fit`, `predict`, R² `score`, and learned `coef_`, `intercept_`, `n_features_in_`. |
-| `LogisticRegression` | Binary batch-gradient-descent classifier: `fit`, `predict_proba`, `predict`, accuracy `score`, and the same learned attributes. Labels must be 0 or 1. |
-| `train_test_split` | Shuffles observations with seeded `mt19937` and returns `X_train, X_test, y_train, y_test`; `test_size` is the test fraction. |
-| `module.cpp` | Combines all bind functions into the one importable extension, `mlite._core`. |
-| `py_*.cpp` | Exactly one adapter between NumPy/pybind11 and its corresponding C++ API. |
-| `_validators.py` | Shared normalization of `X`, `y`, and current scalar parameters; the wrapper layer's common input-error location. |
-| `_decorators.py` | `_ensure_fitted`, which prevents trained-model APIs from being used before `fit`/`load_state_dict`. |
-| `_constants.py` | Defaults: `DEFAULT_LEARNING_RATE = 0.01`, `DEFAULT_EPOCHS = 1000`. |
-| `_typing/*.pyi`, `_core.pyi` | Static signatures; they are not imported at runtime. |
-| `CMakeLists.txt` | The sole C++ compilation-unit list for `_core`, C++17 configuration, and install destination `mlite`. |
-| `pyproject.toml` | Python distribution metadata, runtime NumPy, development tools, and scikit-build-core configuration. |
+| `linear_models` | `LinearRegression`, `LogisticRegression` | Trainable C++ classes with Python wrappers |
+| `model_selection` | `train_test_split` | C++ free function with a Python wrapper |
+| `metrics` | Evaluation metrics | Stateless C++ functions in `metrics/` with Python wrappers |
+| `utils` | Internal validators, constants, decorators | Python-only; not part of the public API |
 
 ## 2. Directory structure and file responsibilities
 
@@ -145,9 +126,10 @@ Neither type owns memory. `MatrixView(const double*, rows, cols)` and `VectorVie
 1. **Facade / Adapter.** A Python wrapper hides the pybind11 ABI and adapts the Python/NumPy contract to C++.
 2. **Thin binding.** The binding only constructs views, calls C++, and converts results; shape validation, fitted state, and domain rules belong above it.
 3. **Value-oriented core.** C++ returns `std::vector` or a struct containing `std::vector`; the binding creates an independent NumPy result.
-4. **Explicit registration.** New code is not discovered automatically. It must be added to CMake and called from `module.cpp`.
-5. **Stateful estimator.** A model starts unfitted, `fit` replaces its learned parameters, read methods use `_ensure_fitted`, and `state_dict`/`load_state_dict` transfer complete state.
-6. **Single public-validation source.** The Python wrapper validates input before C++ and applies equivalent checks in `fit`, prediction methods, and `score`.
+4. **Shared metrics.** Model `score` methods should delegate to the shared `metrics` category rather than re-implementing evaluation formulas internally.
+5. **Explicit registration.** New code is not discovered automatically. It must be added to CMake and called from `module.cpp`.
+6. **Stateful estimator.** A model starts unfitted, `fit` replaces its learned parameters, read methods use `_ensure_fitted`, and `state_dict`/`load_state_dict` transfer complete state.
+7. **Single public-validation source.** The Python wrapper validates input before C++ and applies equivalent checks in `fit`, prediction methods, and `score`.
 
 ## 6. Type A: trainable model class
 
@@ -188,33 +170,37 @@ fit(...) again → replaces learned state with newly trained state
 
 ```cpp
 #pragma once
+
 #include <cstddef>
 #include <vector>
+
 #include "mlite/core/matrix_view.hpp"
 #include "mlite/core/vector_view.hpp"
 
 namespace mlite {
-class NewModel {
-private:
-    std::vector<double> coef_;
-    double intercept_;
-    std::size_t n_features_in_;
-public:
-    NewModel();
-    void fit(const MatrixView& X, const VectorView& y,
-             double learning_rate, std::size_t epochs);
-    std::vector<double> predict(const MatrixView& X) const;
-    double score(const MatrixView& X, const VectorView& y) const;
-    void load_state(const std::vector<double>& coef, double intercept,
-                    std::size_t n_features_in);
-    const std::vector<double>& get_coef() const;
-    double get_intercept() const;
-    std::size_t get_n_features_in() const;
-};
+  class NewModel {
+    private:
+        std::vector<double> coef_;
+        double intercept_;
+        std::size_t n_features_in_;
+    public:
+        NewModel();
+        void fit(const MatrixView& X, const VectorView& y,
+                 double learning_rate, std::size_t epochs);
+        std::vector<double> predict(const MatrixView& X) const;
+        double score(const MatrixView& X, const VectorView& y) const;
+        void load_state(const std::vector<double>& coef, double intercept,
+                        std::size_t n_features_in);
+        const std::vector<double>& get_coef() const;
+        double get_intercept() const;
+        std::size_t get_n_features_in() const;
+    };
 }
 ```
-
+ 
 **[Inferred]** A trainable model stores only parameters needed for prediction and the feature count. Training settings such as `learning_rate` and `epochs` stay in the Python wrapper and are included in serialized state. A new algorithm may have different state, but everything needed for an identical later result must be included in both `state_dict` and `load_state`.
+ 
+**[Recommendation]** If a model implements `score`, do not duplicate metric logic inside the estimator. Instead, delegate to a shared metric function in the `metrics` category, for example `mlite::r2_score` or `mlite::accuracy_score`, and document the shared metric in `docs/lib/metrics/metrics.md`. This keeps evaluation behavior consistent across models and public metric helpers.
 
 ### Binding template
 
@@ -223,6 +209,7 @@ public:
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 #include "mlite/linear_models/new_model.hpp"
+
 namespace py = pybind11;
 
 void bind_new_model(py::module_& m) {
@@ -313,6 +300,7 @@ CMakeLists.txt; core/bindings/module.cpp; python/mlite/<category>/__init__.py
 - For multiple results, use a simple result struct containing values and shape metadata, as `TrainTestSplit` does.
 - The binding creates independent NumPy arrays. When a temporary C++ buffer is the source, call `.copy()` before the struct is destroyed.
 - The Python function runs all validators, checks input compatibility, and imports the native function as a private alias: `from .._core import name as _name`.
+- The metrics category is a shared implementation location for evaluation helpers. A model's `score` method should call into this category when appropriate.
 - The category re-exports only the public name through `__all__`.
 
 ### Lifecycle

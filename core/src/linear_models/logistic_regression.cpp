@@ -122,24 +122,9 @@ namespace mlite {
     }
 
     double LogisticRegression::score(const MatrixView& X, const VectorView& y, double threshold) const {
-        const std::size_t samples = X.rows();
-        const std::size_t features = n_features_in_;
+        const std::vector<int> predictions_int = predict(X, threshold);
 
-        std::vector<double> predictions(samples);
-
-        const double* x_data = X.data();
-
-        for (std::size_t i = 0; i < samples; ++i) {
-            const double* x_row = x_data + i * features;
-
-            double linear = intercept_;
-
-            for (std::size_t j = 0; j < features; ++j) {
-                linear += coef_[j] * x_row[j];
-            }
-
-            predictions[i] = (sigmoid_stable(linear) >= threshold) ? 1.0 : 0.0;
-        }
+        std::vector<double> predictions(predictions_int.begin(), predictions_int.end());
 
         VectorView y_pred(predictions.data(), predictions.size());
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     mlite
-    VERSION 0.0.10
+    VERSION 0.0.11
     DESCRIPTION "ML library"
     LANGUAGES CXX
 )
