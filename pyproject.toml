@@ -9,10 +9,10 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "mlite"
-version = "0.0.11"
+version = "0.0.12"
 description = "ML library written in C++ and Python"
 readme = "README.md"
-license = "MIT"
+license = { text = "MIT" }
 requires-python = ">=3.9"
 
 authors = [
@@ -22,6 +22,9 @@ authors = [
 dependencies = [
     "numpy>=1.24"
 ]
+
+[project.urls]
+documentation = "https://github.com/Ugoke/mlite/blob/main/README.md#documentation"
 
 [project.optional-dependencies]
 

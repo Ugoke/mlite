@@ -336,7 +336,7 @@ A new file does not become part of the package automatically. For every public c
 3. Implement it in `core/src/<category>/<name>.cpp`.
 4. Create `core/bindings/<category>/py_<name>.cpp` with `bind_<name>(py::module_&)`.
 5. In `core/bindings/module.cpp`, add the forward declaration `void bind_<name>(py::module_& m);` and call `bind_<name>(m);` inside `PYBIND11_MODULE(_core, m)`.
-6. In the sole `pybind11_add_module(_core ...)` in `CMakeLists.txt`, add both `.cpp` files: the binding and C++ implementation. Do not add the header.
+6. Ensure the C++ implementation (`core/src/<category>/<name>.cpp`) is listed in `pybind11_add_module(_core ...)` in `CMakeLists.txt`. Binding files under `core/bindings/` are discovered automatically.
 7. Write the wrapper and import the C++ symbol under a private alias.
 8. Add the public re-export and update `__all__` in `python/mlite/<category>/__init__.py`.
 9. Add or update the domain stub at `python/mlite/_typing/<category>.pyi`, then ensure `python/mlite/_core.pyi` exposes it. The current `_core.pyi` scheme aggregates domain stubs.
@@ -354,7 +354,6 @@ bind_new_model(m);
 
 ```cmake
 # CMakeLists.txt, inside pybind11_add_module(_core ...)
-core/bindings/linear_models/py_new_model.cpp
 core/src/linear_models/new_model.cpp
 ```
 

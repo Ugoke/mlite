@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.18)
 
 project(
     mlite
-    VERSION 0.0.11
-    DESCRIPTION "ML library"
     LANGUAGES CXX
 )
 
@@ -43,16 +41,15 @@ find_package(pybind11 REQUIRED)
 # Python Extension Module
 # =========================================
 
+file(GLOB_RECURSE BINDINGS
+    CONFIGURE_DEPENDS
+    core/bindings/*.cpp
+)
+
 pybind11_add_module(
     _core
 
-    core/bindings/module.cpp
-    core/bindings/linear_models/py_linear_regression.cpp
-    core/bindings/linear_models/py_logistic_regression.cpp
-    core/bindings/model_selection/py_train_test_split.cpp
-    core/bindings/model_selection/py_stratified_shuffle_split.cpp
-    core/bindings/metrics/py_r2_score.cpp
-    core/bindings/metrics/py_accuracy_score.cpp
+    ${BINDINGS}
 
     core/src/linear_models/linear_regression.cpp
     core/src/linear_models/logistic_regression.cpp
