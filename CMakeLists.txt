@@ -53,8 +53,11 @@ pybind11_add_module(
 
     core/src/linear_models/linear_regression.cpp
     core/src/linear_models/logistic_regression.cpp
+
     core/src/model_selection/train_test_split.cpp
     core/src/model_selection/stratified_shuffle_split.cpp
+    core/src/model_selection/k_fold.cpp
+
     core/src/metrics/r2_score.cpp
     core/src/metrics/accuracy_score.cpp
 )

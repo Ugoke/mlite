@@ -12,3 +12,19 @@ def accuracy_score(
         y_true: NDArray[np.float64], 
         y_pred: NDArray[np.float64]
     ) -> float: ...
+
+
+def k_fold(
+        X: NDArray[np.float64],
+        y: NDArray[np.float64],
+        n_splits: int,
+        shuffle: bool,
+        random_state: int,
+    ) -> list[
+        tuple[
+            NDArray[np.float64],
+            NDArray[np.float64],
+            NDArray[np.float64],
+            NDArray[np.float64],
+        ]
+    ]: ...

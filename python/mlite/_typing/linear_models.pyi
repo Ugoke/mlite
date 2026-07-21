@@ -68,3 +68,8 @@ class LogisticRegression:
         self, 
         state: dict,
     ) -> None: ...
+
+    def predict_proba(
+        self,
+        X: NDArray[np.float64]
+    ) -> NDArray[np.float64]: ...

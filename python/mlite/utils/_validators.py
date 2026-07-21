@@ -67,3 +67,20 @@ def _validate_random_state(random_state: int) -> int:
         raise ValueError("random_state must be non-negative")
     
     return random_state
+
+
+def _validate_n_splits(n_splits: int) -> int:
+    if type(n_splits) is not int:
+        raise TypeError("n_splits must be int")
+
+    if n_splits < 2:
+        raise ValueError("n_splits must be at least 2")
+
+    return n_splits
+
+
+def _validate_shuffle(shuffle: bool) -> bool:
+    if type(shuffle) is not bool:
+        raise TypeError("shuffle must be bool")
+
+    return shuffle
