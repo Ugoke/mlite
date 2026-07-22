@@ -46,6 +46,7 @@ C++ implementation (core/src/<category>/<snake_name>.cpp)
 | `linear_models` | `LinearRegression`, `LogisticRegression` | Trainable C++ classes with Python wrappers |
 | `model_selection` | `train_test_split` | C++ free function with a Python wrapper |
 | `metrics` | Evaluation metrics | Stateless C++ functions in `metrics/` with Python wrappers |
+| `preprocessing` | `OneHotEncoder`, `OrdinalEncoder` | Stateful C++ transformers with Python wrappers |
 | `utils` | Internal validators, constants, decorators | Python-only; not part of the public API |
 
 ## 2. Directory structure and file responsibilities

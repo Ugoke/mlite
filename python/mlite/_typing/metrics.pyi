@@ -14,6 +14,30 @@ def accuracy_score(
     ) -> float: ...
 
 
+def mean_squared_error(
+        y_true: NDArray[np.float64],
+        y_pred: NDArray[np.float64]
+    ) -> float: ...
+
+
+def root_mean_squared_error(
+        y_true: NDArray[np.float64],
+        y_pred: NDArray[np.float64]
+    ) -> float: ...
+
+
+def mean_absolute_error(
+        y_true: NDArray[np.float64],
+        y_pred: NDArray[np.float64]
+    ) -> float: ...
+
+
+def recall_score(
+        y_true: NDArray[np.float64],
+        y_pred: NDArray[np.float64]
+    ) -> float: ...
+
+
 def k_fold(
         X: NDArray[np.float64],
         y: NDArray[np.float64],

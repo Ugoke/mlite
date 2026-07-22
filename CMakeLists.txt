@@ -60,6 +60,13 @@ pybind11_add_module(
 
     core/src/metrics/r2_score.cpp
     core/src/metrics/accuracy_score.cpp
+    core/src/metrics/mean_squared_error.cpp
+    core/src/metrics/root_mean_squared_error.cpp
+    core/src/metrics/mean_absolute_error.cpp
+    core/src/metrics/recall_score.cpp
+
+    core/src/preprocessing/one_hot_encoder.cpp
+    core/src/preprocessing/ordinal_encoder.cpp
 )
 
 # =========================================
