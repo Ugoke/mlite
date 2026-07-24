@@ -9,7 +9,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "mlite-lib"
-version = "0.1.0"
+version = "0.1.1"
 description = "ML library written in C++ and Python"
 readme = "README.md"
 license = { text = "MIT" }
