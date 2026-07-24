@@ -19,7 +19,7 @@ def test_metadata():
 
 def test_metadata_values():
     assert isinstance(mlite.__title__, str)
-    assert mlite.__title__ == "mlite"
+    assert mlite.__title__ == "mlite-lib"
 
     assert isinstance(mlite.__version__, str)
     assert mlite.__version__ != "unknown"

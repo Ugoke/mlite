@@ -17,16 +17,16 @@ The core is written in C++ using pybind11, while Python provides a friendly inte
 - Fast C++ core
 
 ## Documentation
-- [Installation](docs/installation.md)
-- [Quick Start](docs/quick_start.md)
-- [Linear Regression](docs/lib/linear_models/linear_regression.md)
-- [Logistic Regression](docs/lib/linear_models/logistic_regression.md)
-- [Model Selection](docs/lib/model_selection/model_selection.md)
-- [Metrics](docs/lib/metrics/metrics.md)
-- [Datasets](docs/lib/datasets/datasets.md)
-- [Preprocessing](docs/lib/preprocessing/preprocessing.md)
+- [Installation](https://github.com/Ugoke/mlite/blob/main/docs/installation.md)
+- [Quick Start](https://github.com/Ugoke/mlite/blob/main/docs/quick_start.md)
+- [Linear Regression](https://github.com/Ugoke/mlite/blob/main/docs/lib/linear_models/linear_regression.md)
+- [Logistic Regression](https://github.com/Ugoke/mlite/blob/main/docs/lib/linear_models/logistic_regression.md)
+- [Model Selection](https://github.com/Ugoke/mlite/blob/main/docs/lib/model_selection/model_selection.md)
+- [Metrics](https://github.com/Ugoke/mlite/blob/main/docs/lib/metrics/metrics.md)
+- [Datasets](https://github.com/Ugoke/mlite/blob/main/docs/lib/datasets/datasets.md)
+- [Preprocessing](https://github.com/Ugoke/mlite/blob/main/docs/lib/preprocessing/preprocessing.md)
 
 ## Developer Documentation
-- [Project Structure](docs/dev/project_structure.md)
-- [Documentation Structure](docs/dev/docs_structure.md)
-- [Creating New Modules](docs/dev/new_module_development.md)
+- [Project Structure](https://github.com/Ugoke/mlite/blob/main/docs/dev/project_structure.md)
+- [Documentation Structure](https://github.com/Ugoke/mlite/blob/main/docs/dev/docs_structure.md)
+- [Creating New Modules](https://github.com/Ugoke/mlite/blob/main/docs/dev/new_module_development.md)

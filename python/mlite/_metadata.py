@@ -3,7 +3,7 @@ from importlib.metadata import PackageNotFoundError
 
 
 try:
-    _package = _metadata("mlite")
+    _package = _metadata("mlite-lib")
 
     __version__ = _package.get("Version")
     __title__ = _package.get("Name")

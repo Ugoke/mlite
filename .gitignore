@@ -16,5 +16,3 @@ env/
 .mypy_cache/
 
 .vscode/
-
-ideas.md
