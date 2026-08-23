@@ -1,0 +1,15 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+
+include("${CMAKE_CURRENT_LIST_DIR}/mliteTargets.cmake")
+
+foreach(_mlite_component IN ITEMS foundation tensor execution backend_cpu ops mlite)
+    if(TARGET "mlite::${_mlite_component}")
+        set("mlite_${_mlite_component}_FOUND" TRUE)
+    endif()
+endforeach()
+unset(_mlite_component)
+
+check_required_components(mlite)

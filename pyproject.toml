@@ -1,0 +1,33 @@
+[build-system]
+requires = [
+    "scikit-build-core>=0.9",
+    "pybind11>=2.12",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "mlite-lib"
+version = "0.2.0"
+description = "Compact C++20 CPU tensor library with a Python and NumPy API"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+dev = ["build>=1", "mypy>=1.8", "pytest>=7"]
+
+[tool.scikit-build]
+wheel.packages = ["python/mlite"]
+build-dir = "build/{wheel_tag}"
+install.components = ["python"]
+
+[tool.scikit-build.cmake.define]
+# Wheel builds need only the extension. Native tests and the C++ SDK are
+# exercised by their own CMake/CI jobs and must not inflate wheel builds.
+MLITE_BUILD_TESTS = "OFF"
+MLITE_INSTALL_CXX = "OFF"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

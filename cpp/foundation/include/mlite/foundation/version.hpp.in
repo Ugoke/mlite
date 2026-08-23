@@ -1,0 +1,9 @@
+#pragma once
+
+#include <string_view>
+
+namespace mlite {
+    inline constexpr std::string_view package_name = "@MLITE_PROJECT_NAME@";
+    inline constexpr std::string_view version = "@MLITE_PROJECT_VERSION@";
+    inline constexpr std::string_view description = "@MLITE_PROJECT_DESCRIPTION@";
+}
